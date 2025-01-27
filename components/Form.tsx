@@ -1,55 +1,69 @@
-import { TextField, InputAdornment, Box, Typography, Button } from '@mui/material'
+'use client'
+
+import { yupResolver } from "@hookform/resolvers/yup"
+import { TextField, Box, Typography, Button } from "@mui/material"
+import { useForm } from "react-hook-form"
+import type { FormValues } from "../interfaces/interface"
+import { formSchema } from "@/schema/formSchema"
 
 export default function Form() {
-  return (
-    <div>
-        <div>
-            <h1 className="text-3xl font-bold text-center mb-6">Welcome Back.</h1>
-
-            <form>
 
 
-                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '1px solid #000', p: 4 }}>
-                    <Typography id="sign-in-modal-title" variant="h6" component="h2" className='text-center'>Welcome.</Typography>
-                    <TextField fullWidth
-                        required
-                        label="name"
-                        margin="normal"
-                        InputProps={{
-                            endAdornment: (<InputAdornment position="end">
-                                {/* <PersonIcon /> */}
-                            </InputAdornment>)
-                        }}
-                    />
-
-                    <TextField fullWidth
-                        required
-                        label="email"
-                        margin="normal"
-                        InputProps={{
-                            endAdornment: (<InputAdornment position="end">
-                                {/* <MailIcon /> */}
-                            </InputAdornment>)
-                        }}
-                    />
+    // Initialize React Hook Form with the Yup resolver
+    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+        resolver: yupResolver(formSchema),
+    });
 
 
-                    <TextField fullWidth
-                        required
-                        margin="normal"
-                        label="password"
-                    />
+    // Handle form submission
+    async function onSubmit(data: FormValues) {
+        console.log(data);
+    }
 
-                    <div className="buttons">
-                        <Button variant="contained" type="submit" color="primary" sx={{ mt: 2, mb: 1, paddingX: 12 }}>
-                            Update
-                        </Button>
-                    </div>
+    return (
+        <div className="min-h-screen flex justify-center items-center bg-gray-100">
+            <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-lg">
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <Box sx={{ width: "100%", maxWidth: 400, mx: "auto", p: 4, border: "1px solid #000" }}>
+                        <Typography id="sign-in-modal-title" variant="h6" component="h2" className="text-3xl font-bold text-center mb-2">
+                            Welcome Back.
+                        </Typography>
 
-                    <hr className='my-3 border-y- border-black' />
-                </Box>
-            </form>
+
+                        {/* Email Field */}
+                        <TextField
+                            fullWidth
+                            margin="normal"
+                            label="Email"
+                            {...register("email")}
+                            error={!!errors.email}
+                            placeholder="johndoe@gmail.com"
+                            helperText={errors.email?.message}
+                        />
+
+                        {/* Password Field */}
+                        <TextField
+                            fullWidth
+                            margin="normal"
+                            label="Password"
+                            type="password"
+                            {...register("password")}
+                            error={!!errors.password}
+                            placeholder="********"
+                            helperText={errors.password?.message}
+                        />
+
+                        {/* Submit Button */}
+                        <div className="buttons">
+                            <Button variant="contained" type="submit" color="primary" sx={{ mt: 2, mb: 1, width: "100%" }}>
+                                Sign In
+                            </Button>
+                        </div>
+
+                        <hr className='my-3 border-y- border-black' />
+                    </Box>
+                </form>
+            </div>
         </div>
-    </div>
-  )
+    )
 }
