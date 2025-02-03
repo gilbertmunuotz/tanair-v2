@@ -1,10 +1,10 @@
 'use client'
 
-import LandingImage from "../public/th.jpg";
-import { useState, useEffect } from 'react';
-import Skeleton from '@mui/material/Skeleton';
 import Link from "next/link";
 import Image from "next/image";
+import { useState, useEffect } from 'react';
+import LandingImage from "../public/th.jpg";
+import Skeleton from '@mui/material/Skeleton';
 
 
 export default function Home() {
