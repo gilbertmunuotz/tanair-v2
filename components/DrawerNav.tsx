@@ -1,7 +1,10 @@
+'use client'
+
+import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
-import { toast } from "react-toastify";
-import Photo from "../public/tanair.png";
 import { Tooltip } from "@mui/material";
+import tanair from "@/public/tanair.png";
 import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
 import GroupIcon from '@mui/icons-material/Group';
@@ -31,6 +34,44 @@ export default function DrawerNav() {
             >
                 {isOpen ? (<CloseIcon />) : (<MenuIcon />)}
             </button>
+            <div className={`fixed inset-y-0 left-0 transform ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 transition duration-200 ease-in-out z-30 w-64 bg-gray-200 shadow-lg`}>
+                <div className="p-6 flex flex-col h-full">
+                    <Image src={tanair} alt="DashBoard Image" className="rounded-full h-52 mt-3 mb-4 cursor-pointer object-fill bg-contain" />
+                    <nav>
+                        <ul className="space-y-2">
+                            {NavItems.map((item) => (
+                                <li key={item.path}>
+                                    <Link href={item.path}
+                                        className="flex items-center p-2 rounded-md transition-colors text-black"
+                                        onClick={() => setOpen(false)}
+                                    >
+                                        {item.icon}
+                                        <span className="ml-2">{item.name}</span>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+
+
+                    <Tooltip title={'Log Out'}>
+                        <button
+                            type="button"
+                            // disabled={isLoading}
+                            // onClick={handleLogout}
+                            className='mt-auto mx-2 py-3 bg-red-600/100 rounded-full text-white'>
+                            <LogoutIcon /> Log Out
+                        </button>
+                    </Tooltip>
+                </div>
+            </div>
+
+            {isOpen && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+                    onClick={toggleDrawer} >
+                </div>
+            )}
         </div>
     )
 }
