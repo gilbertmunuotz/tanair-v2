@@ -1,5 +1,5 @@
 import React from 'react';
-import { GetUsers } from './_action';
+// import { GetUsers } from './_action';
 import { Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DrawerNav from '@/components/DrawerNav';
@@ -7,8 +7,8 @@ import DrawerNav from '@/components/DrawerNav';
 
 export default async function page() {
 
-    const users = await GetUsers();
-    console.log("List of Users:", users);
+    // const users = await GetUsers();
+    // console.log("List of Users:", users);
 
     return (
         <div>
