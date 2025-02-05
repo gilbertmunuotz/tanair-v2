@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react";
-import OrderForm from "./OrderForm";
+import OrderForm from "../form/OrderForm";
 import AddIcon from '@mui/icons-material/Add';
 import { Box, Typography, Button, Tooltip } from "@mui/material";
 
@@ -25,8 +25,8 @@ export default function Order() {
             {/* Modal */}
             {open && (
                 <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, border: '1px solid #000', p: 4, backgroundColor: 'background.paper', boxShadow: 24, maxHeight: '80vh', overflow: 'auto', }}>
-                    <Typography className="text-center">
-                        New Order
+                    <Typography className="text-center mb-2">
+                        Create New Order
                     </Typography>
 
                     {/* Render the form */}
