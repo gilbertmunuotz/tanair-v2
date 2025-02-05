@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { formSchema } from "@/schema/formSchema"
 import { yupResolver } from "@hookform/resolvers/yup"
-import type { FormValues } from "../interfaces/interface"
+import type { FormValues } from "../../interfaces/interface"
 import { TextField, Box, Typography, Button } from "@mui/material"
 
 export default function Form() {

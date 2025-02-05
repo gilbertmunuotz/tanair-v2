@@ -1,6 +1,6 @@
 import React from 'react';
 // import { GetOrders } from './_action';
-import Order from '@/components/NewOrder';
+import Order from '@/components/order/NewOrder';
 import DrawerNav from '@/components/DrawerNav';
 
 export default async function page() {
