@@ -10,4 +10,8 @@ interface User {
     role: 'admin' | 'user';
 }
 
-export type { FormValues, User };
+interface OrderFormProp {
+    setOpen: (open: boolean) => void
+}
+
+export type { FormValues, User, OrderFormProp };
