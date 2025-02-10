@@ -5,9 +5,21 @@ import Image from "next/image";
 import { useState, useEffect } from 'react';
 import LandingImage from "../public/th.jpg";
 import Skeleton from '@mui/material/Skeleton';
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 
 export default function Home() {
+
+  // Dynamically Render App
+  const { status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      redirect("/admin/home")
+    }
+  }, [status])
+
 
   // State to track if the image is loaded
   const [imageLoaded, setImageLoaded] = useState(false);

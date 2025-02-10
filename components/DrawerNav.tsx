@@ -10,6 +10,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import GroupIcon from '@mui/icons-material/Group';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { handleLogout } from "./_action";
+import { useRouter } from "next/navigation";
 
 
 // Path: components/DrawerNav.tsx
@@ -24,6 +26,15 @@ export default function DrawerNav() {
     const [isOpen, setOpen] = useState(false);;
 
     const toggleDrawer = () => setOpen(!isOpen);
+
+    const router = useRouter();
+
+    // Logout Logic
+    async function logout() {
+        await handleLogout();
+        router.push("/auth/login"); // Redirect after logout
+        router.refresh(); // Ensure session is cleared
+    }
 
     return (
         <div>
@@ -57,8 +68,7 @@ export default function DrawerNav() {
                     <Tooltip title={'Log Out'}>
                         <button
                             type="button"
-                            // disabled={isLoading}
-                            // onClick={handleLogout}
+                            onClick={logout}
                             className='mt-auto mx-2 py-3 bg-red-600/100 rounded-full text-white'>
                             <LogoutIcon /> Log Out
                         </button>
