@@ -1,24 +1,49 @@
 'use client'
 
+import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { formSchema } from "@/schema/formSchema"
 import { yupResolver } from "@hookform/resolvers/yup"
-import type { FormValues } from "../../interfaces/interface"
+import type { FormValues } from "../../../interfaces/interface"
 import { TextField, Box, Typography, Button } from "@mui/material"
+import { handleLogin } from "./_action";
 
 export default function Form() {
 
+    // Handle Error state Logic 
+    const [serverError, setServerError] = useState<string | null>(null)
+
+    // Destructure useRouter
+    const router = useRouter();
 
     // Initialize React Hook Form with the Yup resolver
     const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
         resolver: yupResolver(formSchema),
     });
 
-
-    // Handle form submission
+    // Handle Form Submission
     async function onSubmit(data: FormValues) {
-        console.log(data);
-    }
+
+        const formData = new FormData();
+        formData.append("email", data.email);
+        formData.append("password", data.password);
+
+        const response = await handleLogin(formData);
+
+        if (response.error) {
+            setServerError(response.error)
+        } else if (response.success) {
+            // Manually update the session
+            await signIn("credentials", {
+                email: data.email,
+                password: data.password,
+                redirect: false
+            })
+            router.push("/admin/home");
+        }
+    };
 
     return (
         <div className="min-h-screen flex justify-center items-center bg-gray-100">
@@ -29,6 +54,13 @@ export default function Form() {
                             Welcome Back.
                         </Typography>
 
+
+                        {/* Display Server Errors  */}
+                        {serverError && (
+                            <Typography color="error" sx={{ mb: 2, textAlign: "center" }}>
+                                {serverError}
+                            </Typography>
+                        )}
 
                         {/* Email Field */}
                         <TextField
