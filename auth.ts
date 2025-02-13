@@ -1,7 +1,6 @@
-import bcrypt from "bcrypt";
+import axios from "axios";
 import NextAuth from "next-auth"
-import userModel from "@/models/user"
-import { connectToMongo } from "@/config/dbconfig";
+import { BACKEND_URI } from "./constant/constant";
 import CredentialsProvider from "next-auth/providers/credentials"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -13,31 +12,33 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
-                await connectToMongo()
 
-                // ✅ Ensure credentials exist & are of correct type
-                const email = credentials?.email as string;
-                const password = credentials?.password as string;
+                try {
+                    // Make call to API
+                    const response = await axios.post(`${BACKEND_URI}/v1/auth/login`, {
+                        email: credentials.email,
+                        password: credentials.password
+                    });
 
-                if (!email || !password) {
-                    throw new Error("Missing email or password");
+                    if (response.data?.jwtToken) {
+                        return {
+                            id: response.data.user.id,
+                            email: response.data.user.email,
+                            name: response.data.user.name,
+                            role: response.data.role,
+                            accessToken: response.data.jwtToken,
+                        };
+                    }
+
+                    return null;
+
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                } catch (error: any) {
+                    // Get the error message from the API response
+                    const errorMessage = error.response?.data?.message
+
+                    throw new Error(errorMessage)
                 }
-
-                // ✅ Fix: Ensure `findOne` receives a valid string
-                const user = await userModel.findOne({ email });
-
-                if (!user) {
-                    throw new Error("User not found");
-                }
-
-                // ✅ Fix: Ensure bcrypt.compare receives correct parameters
-                const passwordMatch = await bcrypt.compare(password, user.password);
-
-                if (!passwordMatch) {
-                    throw new Error("Invalid password");
-                }
-
-                return { id: user.id, email: user.email };
             }
         })
     ],
@@ -51,17 +52,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.id = user.id
+                if (user) {
+                    token.id = user.id!;
+                    token.email = user.email;
+                    token.name = user.name;
+                    token.role = user.role;
+                    token.accessToken = user.accessToken;
+                }
             }
             return token
         },
         async session({ session, token }) {
             if (session.user) {
-                session.user.id = token.id as string
+                if (token) {
+                    session.user.id = token.id as string;
+                    session.user.email = token.email as string;
+                    session.user.name = token.name;
+                    session.user.role = token.role as string;
+                    session.accessToken = token.accessToken as string;
+                }
             }
             return session
         },
-    }
+    },
 });
 
 const handler = NextAuth;

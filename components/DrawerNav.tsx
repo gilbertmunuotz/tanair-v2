@@ -5,19 +5,17 @@ import Image from "next/image";
 import { useState } from "react";
 import { Tooltip } from "@mui/material";
 import tanair from "@/public/tanair.png";
-import HomeIcon from '@mui/icons-material/Home';
-import MenuIcon from '@mui/icons-material/Menu';
-import GroupIcon from '@mui/icons-material/Group';
-import CloseIcon from '@mui/icons-material/Close';
-import LogoutIcon from '@mui/icons-material/Logout';
 import { handleLogout } from "./_action";
 import { useRouter } from "next/navigation";
+import HomeIcon from '@mui/icons-material/Home';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 
 // Path: components/DrawerNav.tsx
 const NavItems = [
     { name: "Home", path: "/admin/home", icon: <HomeIcon sx={{ color: 'black', fontSize: 30 }} /> },
-    { name: "Users", path: "/admin/users", icon: <GroupIcon sx={{ color: 'black', fontSize: 30 }} /> }
 ]
 
 export default function DrawerNav() {
